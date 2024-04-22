@@ -1,0 +1,41 @@
+name: build 
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: pip install pymarkdownlnt
+      - run: pymarkdownlnt -c .pymarkdown-linting-cfg.json scan --recurse docs
+  deploy:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - uses: actions/cache@v3
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - run: pip install mkdocs-material 
+      - run: pip install pymdown-extensions
+      - run: pip install mkdocs-awesome-pages-plugin
+      - run: pip install mkdocs-macros-plugin
+      - run: pip install mkdocs-git-revision-date-localized-plugin
+      - run: pip install mkdocs-video
+      - run: pip install markdown-grid-tables
+      - working-directory: ./docs
+        run: mkdocs gh-deploy --force
