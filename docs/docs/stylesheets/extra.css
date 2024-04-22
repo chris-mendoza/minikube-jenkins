@@ -1,0 +1,13 @@
+@font-face {
+    font-family: "FiraSans-Light";
+    src: "assets/fonts";
+}
+
+[data-md-color-scheme="slate"] {
+    --md-primary-fg-color:#3700B3;
+    --md-typeset-a-color: #BB86FC;
+    --md-accent-fg-color: #03dac6;
+    --md-accent-bg-color: #526cfe1a;
+    --md-hue: 225;
+    --md-text-font: "FiraSans-Light";
+}
